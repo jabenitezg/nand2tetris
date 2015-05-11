@@ -1,0 +1,116 @@
+// Brian Grady
+// File name: src/project09/Breakaway/Ball.jack
+
+/**
+ * Implements a graphic ball. A graphic ball has a screen location
+ * and a size. It also has methods for drawing, erasing, and moving on the 
+ * screen.
+ */
+class Ball {
+
+    // Location on screen
+    field int x, y, x_sim, y_sim;
+
+    field int size;
+    
+    // The change in position of the ball
+    field int delta_x, delta_y;
+    
+    // Stores momentum of ball
+    field int m;
+    
+    field Hitbox hitbox;
+          
+    constructor Ball new(int Ax, int Ay, int Asize, int Adelta_x, int Adelta_y) {
+        let x = Ax;
+        let y = Ay;
+        let size = Asize;
+        let delta_x = Adelta_x;
+        let delta_y = Adelta_y;
+        
+        let m = Math.sqrt( (delta_x*delta_x) + (delta_y*delta_y));
+        
+        let hitbox = Hitbox.new(x - size, x + size, y - size, y + size);
+        
+        do draw();
+
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawCircle(x, y, size);
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawCircle(x, y, size);
+        return;
+    }
+        
+    /** Simulates the movement of the ball on the screen. */
+    method void moveBallSim() {
+        let x_sim = x + delta_x;
+        let y_sim = y + delta_y;
+        do hitbox.update(x_sim - size, x_sim + size, y_sim - size, y_sim + size);
+        return;
+    }
+    
+    method Hitbox getHitbox() {
+        return hitbox;
+    }
+    
+    /** Arithmetically negates the delta_x value */
+    method void flipDeltaX() {
+        let delta_x = -delta_x;
+        return;
+    }
+    
+    /** Arithmetically negates the delta_y value */
+    method void flipDeltaY() {
+        let delta_y = -delta_y;
+        return;
+    }
+    
+    method void setDelta(int Adelta_x) {
+        let Adelta_x = Adelta_x / 3;
+        if (Adelta_x = 0) {
+            if (delta_x > 0) {
+                let delta_x = 1;
+            }
+            else {
+                if (delta_x < 0) {
+                    let delta_x = -1;
+                }
+            }
+        }
+        else {
+            let delta_x = Adelta_x;
+        }    
+        let delta_y = - Math.sqrt( (m*m) - (delta_x*delta_x) ) ;
+
+        return;
+    }    
+    
+    method void setDeltaX(int Adelta_x) {
+        let delta_x = Adelta_x;
+        return;
+    }
+    
+    method void setDeltaY(int Adelta_y) {
+        let delta_y = Adelta_y;
+        return;
+    }    
+    
+    method void moveBall() {
+        let x = x + delta_x;
+        let y = y + delta_y;
+        return;
+    }
+}

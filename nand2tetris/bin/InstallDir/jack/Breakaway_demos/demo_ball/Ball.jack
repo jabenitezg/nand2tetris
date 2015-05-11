@@ -1,0 +1,87 @@
+// Ball.jack
+
+/**
+ * Implements a graphic ball. A graphic ball has a screen location
+ * and a size. It also has methods for drawing, erasing, moving on the 
+ * screen, and changing its size.
+ */
+class Ball {
+
+    // Location on a 2048x1024 screen
+    field int x, y;
+
+    // The size of the ball
+    field int size;
+    
+    // The change in position of the ball
+    field int delta_x, delta_y;
+        
+    /** Constructs a new ball with a given location, size, and delta location. */
+    constructor Ball new(int Ax, int Ay, int Asize, int Adelta_x, int Adelta_y) {
+        let x = Ax;
+        let y = Ay;
+        let size = Asize;
+        let delta_x = Adelta_x;
+        let delta_y = Adelta_y;
+
+        do draw();
+
+        return this;
+    }
+    
+    /** Seeing what happens if there are two different constructors */
+    constructor Ball new() {
+        let x = 200;
+        let y = 150;
+        let size = 2;
+        let delta_x = 3;
+        let delta_y = 6;
+
+        do draw();
+
+        return this;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Draws the ball on the screen. */
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawCircle(x/4, y/4, size);
+        return;
+    }
+
+    /** Erases the ball from the screen. */
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawCircle(x/4, y/4, size);
+        return;
+    }
+    
+    /** Moves the ball on the screen. */
+    method void moveBall() {
+        
+        // 4*148=592; 4*363 = 1452      add or subtract 4 to account for integer-divide-by-4 when drawing and erasing
+        if ( ((x + delta_x - (4*size) + 4) < 596) | ((x + delta_x + (4*size) - 4) > 1448) ){
+            let delta_x = -delta_x;
+        }
+        
+        // 4*2=8; 4*253 = 1012    
+        if ( ((y + delta_y - (4*size) + 4) < 12) | ((y + delta_y + (4*size) - 4) > 1008) ){
+            let delta_y = -delta_y;
+        }
+        
+        do erase();
+    
+        let x = x + delta_x;
+        let y = y + delta_y;
+
+        do draw();
+    
+        return;
+    }
+}

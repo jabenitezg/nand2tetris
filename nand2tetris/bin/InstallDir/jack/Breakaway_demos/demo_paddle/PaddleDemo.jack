@@ -1,0 +1,47 @@
+// PaddleDemo.jack
+
+/**
+ * Implements the Paddle Demo game.
+ * In this game a black Paddle sprite moves around the screen.
+ */
+class PaddleDemo {
+
+    // The Paddle
+    field Paddle paddle;
+
+    /** Constructs a new Paddle Demo Game. */
+    constructor PaddleDemo new() {
+        let paddle = Paddle.new(1024, 512, 2);
+
+        return this;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do paddle.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Starts the game. */
+    method void run() {
+        var boolean exit;
+
+        let exit = false;
+        
+        // centered rectangle size 216x252
+        do Screen.setColor(true);
+        do Screen.drawRectangle(146, 0, 365, 255);
+        do Screen.setColor(false);
+        do Screen.drawRectangle(148, 2, 363, 253);
+        
+
+        while (~exit) {
+            do paddle.movePaddle();
+            do Sys.wait(55); // Delays the next movement.  (Anything below ~53 and the paddle starts flickering (player can see the erase() frame)
+        }
+            
+        return;
+	}
+
+}

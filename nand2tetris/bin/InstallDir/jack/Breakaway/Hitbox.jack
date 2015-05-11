@@ -1,0 +1,49 @@
+// Brian Grady
+// File name: src/project09/Breakaway/Hitbox.jack
+
+/**
+ * Implements a hitbox, which is in this case defined as an 
+ * axis-aligned minimum bounding rectangle. An object's hitbox
+ * consists of the values of min(x), max(x), min(y), max(y),
+ * or the rows and columns at the edges of an object's graphic.
+ * It also has methods for setting and getting the bounds of the hitbox.
+ */
+class Hitbox {
+
+    // Store the values of the first out of bounds pixel values
+    field int x_min, x_max, y_min, y_max;
+    
+    constructor Hitbox new(int Ax_min, int Ax_max, int Ay_min, int Ay_max) {
+        let x_min = Ax_min;
+        let x_max = Ax_max;
+        let y_min = Ay_min;
+        let y_max = Ay_max;
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+    
+    method void update(int Ax_min, int Ax_max, int Ay_min, int Ay_max) {
+        let x_min = Ax_min;
+        let x_max = Ax_max;
+        let y_min = Ay_min;
+        let y_max = Ay_max;
+        return;
+    }
+    
+    method int getXmin() {
+        return x_min;
+    }    
+    method int getXmax() {
+        return x_max;
+    }
+    method int getYmin() {
+        return y_min;
+    }
+    method int getYmax() {
+        return y_max;
+    }
+}

@@ -1,0 +1,82 @@
+// Brian Grady
+// File name: src/project09/Breakaway/Paddle.jack
+
+/**
+ * Implements a paddle. A paddle has a screen location,
+ * width, and height. It also has methods for drawing, erasing, and moving on the 
+ * screen.
+ */
+class Paddle {
+
+    // Location on the screen
+    field int x, y, x_sim, y_sim;
+
+    field int width, height;
+    
+    field Hitbox hitbox;
+
+    constructor Paddle new(int Ax, int Ay, int Awidth, int Aheight) {
+        let x = Ax;
+        let y = Ay;
+        let width = Awidth;
+        let height = Aheight;
+        
+        let y_sim = y;
+        
+        do draw();
+        
+        let hitbox = Hitbox.new(x - (width/2), x + (width/2), y - (height/2), y + (height/2));
+
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x - (width/2), y - (height/2), x + (width/2), y + (height/2));
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x - (width/2), y - (height/2), x + (width/2), y + (height/2));
+        return;
+    }
+        
+    /** Simulates moving the paddle left. */
+    method void moveLeftSim() {
+        let x_sim = x - 4;
+        do hitbox.update(x_sim - (width/2), x_sim + (width/2), y_sim - (height/2), y_sim + (height/2));
+        return;
+    }
+    
+    /** Simulates moving the paddle right. */
+    method void moveRightSim() {
+        let x_sim = x + 4;
+        do hitbox.update(x_sim - (width/2), x_sim + (width/2), y_sim - (height/2), y_sim + (height/2));
+        return;
+    }
+    
+    method Hitbox getHitbox() {
+        return hitbox;
+    }
+        
+    /** Moves left by 4 pixels. */
+    method void moveLeft() {
+        let x = x - 4;
+        do hitbox.update(x - (width/2), x + (width/2), y - (height/2), y + (height/2));
+
+        return;
+    }
+
+    /** Moves right by 4 pixels. */
+    method void moveRight() {
+        let x = x + 4;
+        do hitbox.update(x - (width/2), x + (width/2), y - (height/2), y + (height/2));
+        return;
+    }
+}

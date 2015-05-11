@@ -1,0 +1,105 @@
+// Brian Grady
+// File name: src/project09/Breakaway/Brick.jack
+
+/**
+ * Implements a graphic brick. A graphic square has a screen location
+ * and a size. It also has methods for drawing, erasing, moving on the 
+ * screen, and changing its size.
+ */
+class Brick {
+
+    // Location on the screen
+    field int x, y;
+    
+    field int width, height;
+    
+    field Hitbox hitbox;
+    
+    // Play area values (how to use without explicitly typing out paw?)
+    field int paw, paxmin, paxmax;
+        
+    constructor Brick new( int Ax, int Ay, int Awidth, int Aheight) {
+        let x = Ax;
+        let y = Ay;
+        let width = Awidth;
+        let height = Aheight;
+        
+        let paw = 216;
+        let paxmin = 255 - (paw/2) + 1;
+        let paxmax = 256 + (paw/2) - 1;
+        
+        do draw();
+        let hitbox = Hitbox.new(x - (width/2),x + (width/2), y - (height/2), y + (height/2));
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        
+        if (((x + (width/2)) > paxmax)) {
+            do Screen.drawRectangle(x - (width/2), y - (height/2), paxmax, y + (height/2));
+            do Screen.drawRectangle(paxmin, y - (height/2), (x - paw) + (width/2), y + (height/2));
+        }
+        else {
+            if (((x - (width/2)) < paxmin)) {
+                do Screen.drawRectangle(x - (width/2) + paw, y - (height/2), paxmax, y + (height/2));
+                do Screen.drawRectangle(paxmin, y - (height/2), x + (width/2), y + (height/2));
+            }
+            else {
+                do Screen.drawRectangle(x - (width/2), y - (height/2), x + (width/2), y + (height/2));
+            }
+        }    
+        
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        
+        if (((x + (width/2)) > paxmax)) {
+            do Screen.drawRectangle(x - (width/2), y - (height/2), paxmax, y + (height/2));
+            do Screen.drawRectangle(paxmin, y - (height/2), (x - paw) + (width/2), y + (height/2));
+        }
+        else {
+            if (((x - (width/2)) < paxmin)) {
+                do Screen.drawRectangle(x - (width/2) + paw, y - (height/2), paxmax, y + (height/2));
+                do Screen.drawRectangle(paxmin, y - (height/2), x + (width/2), y + (height/2));
+            }
+            else {
+                do Screen.drawRectangle(x - (width/2), y - (height/2), x + (width/2), y + (height/2));
+            }
+        }    
+        
+        return;
+    }
+        
+    method Hitbox getHitbox() {
+        return hitbox;
+    }
+    
+    /** Moves bricks right by 4 pixels. */
+    method void moveRight() {
+        let x = x + 4;
+        if (x > 363) {
+            let x = x - 216;
+        }    
+        do hitbox.update(x - (width/2), x + (width/2), y - (height/2), y + (height/2));
+        return;
+    }
+    
+    /** Moves bricks left by 4 pixels. */
+    method void moveLeft() {
+        let x = x - 4;
+        if (x < 148) {
+            let x = x + 216;
+        }    
+        do hitbox.update(x - (width/2), x + (width/2), y - (height/2), y + (height/2));
+        return;
+    }
+        
+}

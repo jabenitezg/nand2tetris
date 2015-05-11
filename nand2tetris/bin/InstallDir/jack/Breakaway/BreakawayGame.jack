@@ -1,0 +1,300 @@
+// Brian Grady
+// File name: src/project09/Breakaway/BreakawayGame.jack
+
+/**
+ * Implements the Breakaway game.
+ * The player moves a paddle left and right to redirect a
+ * moving ball into a "wall" of breakable bricks.
+ * The left and right arrow keys are used to move the paddle.
+ * The 'q' key is used to quit the game.
+ */
+class BreakawayGame {
+
+    field PlayArea playarea;
+    field Ball ball;
+    field Paddle paddle;
+    field Wall wall;
+    
+    field int lives;
+    field int score;
+    
+    // User input
+    field char key;
+        
+    // Menu state
+    field int state;
+       
+    /** Constructs a new Breakaway Game. */
+    constructor BreakawayGame new() {
+        let state = 0;
+        return this;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do playarea.dispose();
+        do ball.dispose();
+        do paddle.dispose();
+        do wall.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Runs the game */
+    method void run() {
+               
+        while ( true ) {
+        
+            // Alternative to switch-case or if-else: each state is a class
+            // Have one currentState class and just loop through processInput,update,render
+            // Update could assign new state to currentState
+        
+            // Start Screen; state = 0
+            if (state = 0) {
+                do printStartScreen();
+                do waitSpacePressed();
+                do initializeGameLoop();
+            }
+            else {
+            // Game Loop; state = 1    
+                if (state = 1) {
+                    do Screen.clearScreen();
+                    do initializeComponents();
+                    while (state=1) {
+                        do processInput();            
+                        do update();
+                        do render();
+                        do Sys.wait(55);
+                    }
+                }
+                else {
+            // Lost a Life; state = 2    
+                    if (state = 2) {
+                        do printLives();
+                        do printLostLife();
+                        do waitSpacePressed();
+                    }
+                    else {
+            // Game Over; state = 3        
+                        if (state = 3) {
+                            do printGameOver();
+                            do waitSpacePressed();
+                            do waitSpaceReleased();
+                        }
+                        else {
+            // You Win; state = 4            
+                            if (state = 4) {
+                                do printYouWin();
+                                do waitSpacePressed();
+                                do waitSpaceReleased();
+                            }
+                        }    
+                    }
+                }
+            }
+                                                       
+        }
+        return;
+	}
+    
+    method void waitSpacePressed() {
+        while (~(Keyboard.keyPressed() = 32)) {
+        }
+        if ((state = 0) | (state = 2)) {
+            let state = 1;
+        }
+        else {
+            let state = 0;
+        }    
+        return;
+    }
+    
+    method void waitSpaceReleased() {
+        while ((Keyboard.keyPressed() = 32)) {
+        }
+        return;
+    }
+    
+    method void initializeGameLoop() {
+        let lives = 2;
+        let wall = Wall.new();
+        // Possible improvement: store different level designs in Wall constructor
+        // x,y,width,height,delta_x,delta_y,rows,cols
+        // A
+        //do wall.newBrickGroup(176, 50, 30, 10, 32, 12, 3, 6); 
+        // B
+        do wall.newBrickGroup(176, 50, 30, 10, 32, 12, 1, 6);
+        // C
+        //do wall.newBrickGroup(176, 50, 30, 10, 32, 12, 1, 6);
+        //do wall.newBrickGroup(191, 62, 30, 10, 32, 12, 1, 6);
+        do wall.draw();
+        return;
+    }
+    
+    method void initializeComponents() {
+        let playarea = PlayArea.new(216, 252);    //width, height
+        let ball = Ball.new(250, 100, 2, 3, 6);   // x,y,size,delta_x,delta_y
+        let paddle = Paddle.new(255, 220, 25, 7); // x,y,width,height
+        do printLives();
+        return;
+    }
+    
+    /****************************************************************/
+    method void printMessage(String s) {
+        do Output.moveCursor(8,27); // bounds:( [0,22] , [0,63] )
+        do Output.printString(s);
+        let s = "Press Spacebar to Play";
+        do Output.moveCursor(14,21);
+        do Output.printString(s);
+        return;
+    }    
+
+    method void printStartScreen() {
+        var String s;
+        do Screen.clearScreen();
+        let s = " Breakaway";
+        do printMessage(s);   
+        return;
+    }    
+            
+    method void printYouWin() {
+        var String s;
+        let s = " You Win!!";
+        do printMessage(s);
+        return;
+    }    
+        
+    method void printLostLife() {
+        var String s;
+        let s = "Lost a life";
+        do printMessage(s);
+        return;
+    }    
+    
+    method void printGameOver() {
+        var String s;
+        let s = " Game Over";
+        do printMessage(s);
+        return;
+    }    
+    
+    method void printLives() {
+        var String s;
+        let s = "Lives: ";
+        do Output.moveCursor(1,0);
+        do Output.printString(s);
+        do Output.printInt(lives);
+        return;
+    }    
+    /****************************************************************/
+
+    /** Process player input from the keyboard. */
+    /** Notes: Maybe save input in a more readable way than key = 81 or 130 or 132? */
+    method void processInput() {
+        let key = Keyboard.keyPressed();
+        return;
+    }
+    
+    /** Update game state. */
+    /** Notes: Need to clean this up so its easy to read (move objects, collision detection, collision resolution)*/
+    method void update() {
+        var Hitbox ballh, playareah, paddleh, brickh;
+        var int count, i;
+        var int a, b;
+               
+        do wall.moveRight();
+        
+        let playareah = playarea.getHitbox();
+        
+        if (key = 81) {         // q
+            let state = 0;
+        }
+        
+        // sim paddle movement, resolve collisions with play area, move paddle
+        if (key = 130) {            // left arrow
+            do paddle.moveLeftSim();
+            let paddleh = paddle.getHitbox();
+            if ( ~( paddleh.getXmin() < playareah.getXmin() ) ) {
+                do paddle.moveLeft();
+            }    
+        }
+        else {
+            if (key = 132) {        // right arrow
+                do paddle.moveRightSim();
+                let paddleh = paddle.getHitbox();
+                if ( ~(paddleh.getXmax() > playareah.getXmax()) ) {
+                    do paddle.moveRight();
+                }    
+            }
+        }
+        
+        // sim ball movement; resolve collisions with play area, with paddle, and with wall; move ball
+        
+        do ball.moveBallSim();
+        
+        let ballh = ball.getHitbox();
+        let paddleh = paddle.getHitbox();
+        
+        // with playarea
+        if ( ( ballh.getXmin() < playareah.getXmin() ) | ( ballh.getXmax() > playareah.getXmax() ) ) {
+            do ball.flipDeltaX();
+        }
+        if ( ballh.getYmin() < playareah.getYmin() ) {
+            do ball.flipDeltaY();
+        }
+        if ( ballh.getYmax() > playareah.getYmax() ) {
+            do ball.flipDeltaY();
+            let lives = lives - 1;
+            if(lives < 0 ) {
+                let state = 3;
+            }
+            else {
+                let state = 2;
+            }    
+        }
+
+        // with paddle
+        if ( ( ballh.getYmax() > paddleh.getYmin() ) & ( ballh.getYmin() < paddleh.getYmax() ) &
+             ( ballh.getXmax() > paddleh.getXmin() ) & ( ballh.getXmin() < paddleh.getXmax() ) ){
+            let a = ( paddleh.getXmax() + paddleh.getXmin() ) / 2;
+            let b = ( ballh.getXmax() + ballh.getXmin() ) / 2;
+            do ball.setDelta(b-a);
+        }
+        
+        // with wall
+        let count = wall.getCount();
+        let i = 0;
+        while (i < count) {
+            let brickh = wall.getHitbox(i);
+            if ( ( ( ballh.getXmax() > brickh.getXmin() ) & ( ballh.getXmin() < brickh.getXmax() ) ) &
+                 ( ( ( ballh.getYmax() > brickh.getYmin() ) & ( ballh.getYmax() < brickh.getYmax() ) ) |
+                 ( ( ballh.getYmin() < brickh.getYmax() ) & ( ballh.getYmin() > brickh.getYmin() ) ) ) ){
+                do ball.flipDeltaY();
+                do wall.destroyBrick(i);
+            }
+            let i = i + 1;
+        }
+        if (wall.isDestroyed()) {
+            let state = 4;
+        }    
+                
+        do ball.moveBall();
+        
+        do ballh.dispose();
+        do playareah.dispose();
+        do paddleh.dispose();
+        do brickh.dispose();
+        
+        return;
+    }
+
+    /** Render graphics on screen. */
+    method void render() {
+        do playarea.clear();
+        do paddle.draw();
+        do ball.draw();
+        do wall.draw();
+        return;
+    }
+            
+}

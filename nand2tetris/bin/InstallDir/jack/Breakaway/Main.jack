@@ -1,0 +1,18 @@
+// Brian Grady
+// File name: src/project09/Breakaway/Main.jack
+
+/**
+ * The Main class initializes a new Breakaway game and starts it.
+ */
+class Main {
+
+    function void main() {
+        var BreakawayGame game;
+        
+        let game = BreakawayGame.new();
+        do game.run();
+        do game.dispose();
+        
+        return;
+    }
+}

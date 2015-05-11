@@ -1,0 +1,204 @@
+function Ball.new 0
+push constant 9
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push argument 2
+pop this 4
+push argument 3
+pop this 5
+push argument 4
+pop this 6
+push this 5
+push this 5
+call Math.multiply 2
+push this 6
+push this 6
+call Math.multiply 2
+add
+call Math.sqrt 1
+pop this 7
+push this 0
+push this 4
+sub
+push this 0
+push this 4
+add
+push this 1
+push this 4
+sub
+push this 1
+push this 4
+add
+call Hitbox.new 4
+pop this 8
+push pointer 0
+call Ball.draw 1
+pop temp 0
+push pointer 0
+return
+function Ball.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Ball.draw 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 4
+call Screen.drawCircle 3
+pop temp 0
+push constant 0
+return
+function Ball.erase 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push this 4
+call Screen.drawCircle 3
+pop temp 0
+push constant 0
+return
+function Ball.moveBallSim 0
+push argument 0
+pop pointer 0
+push this 0
+push this 5
+add
+pop this 2
+push this 1
+push this 6
+add
+pop this 3
+push this 8
+push this 2
+push this 4
+sub
+push this 2
+push this 4
+add
+push this 3
+push this 4
+sub
+push this 3
+push this 4
+add
+call Hitbox.update 5
+pop temp 0
+push constant 0
+return
+function Ball.getHitbox 0
+push argument 0
+pop pointer 0
+push this 8
+return
+function Ball.flipDeltaX 0
+push argument 0
+pop pointer 0
+push this 5
+neg
+pop this 5
+push constant 0
+return
+function Ball.flipDeltaY 0
+push argument 0
+pop pointer 0
+push this 6
+neg
+pop this 6
+push constant 0
+return
+function Ball.setDelta 0
+push argument 0
+pop pointer 0
+push argument 1
+push constant 3
+call Math.divide 2
+pop argument 1
+push argument 1
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 5
+push constant 0
+gt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 1
+pop this 5
+goto IF_END1
+label IF_FALSE1
+push this 5
+push constant 0
+lt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 1
+neg
+pop this 5
+label IF_FALSE2
+label IF_END1
+goto IF_END0
+label IF_FALSE0
+push argument 1
+pop this 5
+label IF_END0
+push this 7
+push this 7
+call Math.multiply 2
+push this 5
+push this 5
+call Math.multiply 2
+sub
+call Math.sqrt 1
+neg
+pop this 6
+push constant 0
+return
+function Ball.setDeltaX 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 5
+push constant 0
+return
+function Ball.setDeltaY 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 6
+push constant 0
+return
+function Ball.moveBall 0
+push argument 0
+pop pointer 0
+push this 0
+push this 5
+add
+pop this 0
+push this 1
+push this 6
+add
+pop this 1
+push constant 0
+return

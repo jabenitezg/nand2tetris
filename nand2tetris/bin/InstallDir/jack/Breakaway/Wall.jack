@@ -1,0 +1,150 @@
+// Brian Grady
+// File name: src/project09/Breakaway/Wall.jack
+
+/**
+ * Implements a graphic wall made of bricks. A graphic square has a screen location
+ * and a size. It also has methods for drawing, erasing, moving on the 
+ * screen, and changing its size.
+ */
+class Wall {
+
+    // Number of bricks created
+    field int count;
+    
+    // Array to hold bricks
+    field Array bricks;
+    
+    // Temporary Brick for assignments
+    field Brick temp;
+    
+    constructor Wall new() {
+        let count = 0;
+        let bricks = Array.new(20); //keep track of up to 20 bricks
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+    
+    // Code explanation:...
+    // var Brick temp;
+    // let temp = bricks[i];
+    // ...Only the reference is copied - no new object is constructed
+    // (temp and bricks[i] are references to the same object)
+    
+    method void newBrick(int Ax, int Ay, int Awidth, int Aheight) {
+        let bricks[count] = Brick.new(Ax, Ay, Awidth, Aheight);
+        let count = count + 1;
+        return;
+    }
+        
+    method void destroyBrick(int brickID) {
+        var int i;
+        let i = brickID;
+        while ( i < (count-1) ) {
+            let bricks[i] = bricks[i+1];
+            let i = i + 1;
+        }    
+        let count = count - 1;
+        return;
+    }
+    
+    method void newBrickGroup(int Ax, int Ay, int Awidth, int Aheight, int Adelta_x, int Adelta_y, int Arows, int Acolumns) {
+        var int i, j;
+        
+        let i = 0;
+        while(i < Arows) {
+            let j = 0;
+            while (j < Acolumns) {
+                do newBrick(Ax + (j*Adelta_x), Ay + (i*Adelta_y), Awidth, Aheight);
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }    
+        return;
+    }
+    
+    /** Draws the wall on the screen. */
+    method void draw() {
+        var int i;
+        
+        do Screen.setColor(true);
+        
+        let i = 0;
+        while (i < count) {
+            let temp = bricks[i];
+            do temp.draw();
+            let i = i + 1;
+        }
+        return;
+    }
+
+    /** Erases the wall from the screen. */
+    method void erase() {
+        var int i;
+        
+        do Screen.setColor(false);
+        
+        let i = 0;
+        while (i < count) {
+            let temp = bricks[i];
+            do temp.erase();
+            let i = i + 1;
+        }    
+        return;
+    }
+    
+    /** Moves all bricks right by 4 pixels. */
+    method void moveRight() {
+        var int i;
+        
+        let i = 0;
+        while (i < count) {
+            let temp = bricks[i];
+            do temp.moveRight();
+            let i = i + 1;
+        }
+        
+        return;
+    }
+    
+    /** Moves all bricks left by 4 pixels. */
+    method void moveLeft() {
+        var int i;
+        
+        let i = 0;
+        while (i < count) {
+            let temp = bricks[i];
+            do temp.moveLeft();
+            let i = i + 1;
+        }
+        
+        return;
+    }
+
+    /** Returns the Brick object of bricks[] indexed by brickID */    
+    method Brick getBrick(int brickID) {
+        return bricks[brickID];
+    }
+    
+    method int getCount() {
+        return count;
+    }
+    
+    method Hitbox getHitbox(int brickID) {
+        let temp = bricks[brickID];
+        return temp.getHitbox();
+    }    
+    
+    /** Returns true if no bricks are left in the wall*/
+    method boolean isDestroyed() {
+        var boolean destroyed;
+        if (count = 0) {
+            let destroyed = true;
+        }            
+        return destroyed;
+    }    
+    
+}

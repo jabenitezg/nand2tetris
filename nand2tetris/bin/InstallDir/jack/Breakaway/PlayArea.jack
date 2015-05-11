@@ -1,0 +1,56 @@
+// Brian Grady
+// File name: src/project09/Breakaway/PlayArea.jack
+
+/**
+ * Implements a play area. A play area has a width and height.
+ * It is a 2 pixel thick rectangle, centered around the (x:255,256; y: 127,128) block.
+ * It also has methods for drawing and erasing.
+ */
+class PlayArea {
+
+    field int width, height;
+    
+    // Store the values of the first out of bounds pixel values
+    field int x_min, x_max, y_min, y_max;
+    
+    field Hitbox hitbox;
+
+    constructor PlayArea new(int Awidth, int Aheight) {
+        let width = Awidth;
+        let height = Aheight;
+        
+        let x_min = 255 - (width/2);
+        let x_max = 256 + (width/2);
+        let y_min = 127 - (height/2);
+        let y_max = 128 + (height/2);
+        let hitbox = Hitbox.new(x_min, x_max, y_min, y_max);
+        
+        do drawBorder();
+
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+    
+    method Hitbox getHitbox() {
+        return hitbox;
+    }    
+
+    method void drawBorder() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x_min - 1, y_min - 1, x_max + 1, y_max + 1);
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x_min + 1, y_min + 1, x_max - 1, y_max - 1);
+        return;
+    }   
+
+    /** Clears the screen inside the play area borders. */
+    method void clear() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x_min + 1, y_min + 1, x_max - 1, y_max - 1);
+        return;
+    }
+}

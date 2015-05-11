@@ -1,0 +1,47 @@
+// BallDemo.jack
+
+/**
+ * Implements the Ball Demo game.
+ * In this game a black ball sprite moves around the screen.
+ */
+class BallDemo {
+
+    // The ball
+    field Ball ball;
+
+    /** Constructs a new Ball Demo Game. */
+    constructor BallDemo new() {
+        let ball = Ball.new(1024, 512, 2, 10, 15);
+
+        return this;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do ball.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Starts the game. */
+    method void run() {
+        var boolean exit;
+
+        let exit = false;
+        
+        // centered rectangle size 216x252
+        do Screen.setColor(true);
+        do Screen.drawRectangle(146, 0, 365, 255);
+        do Screen.setColor(false);
+        do Screen.drawRectangle(148, 2, 363, 253);
+        
+
+        while (~exit) {
+            do ball.moveBall();
+            do Sys.wait(55); // Delays the next movement.  (Anything below ~53 and the ball starts flickering (player can see the erase() frame)
+        }
+            
+        return;
+	}
+
+}

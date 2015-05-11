@@ -1,0 +1,18 @@
+// Demo - moving ball
+
+/**
+ * The Main class initializes a new Ball Demo game and starts it.
+ */
+class Main {
+
+    /** Initializes a new game and starts it. */    
+    function void main() {
+        var BallDemo game;
+
+        let game = BallDemo.new();
+        do game.run();
+        do game.dispose();
+
+        return;
+    }
+}

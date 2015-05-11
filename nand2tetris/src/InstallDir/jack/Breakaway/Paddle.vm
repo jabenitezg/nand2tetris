@@ -1,0 +1,243 @@
+function Paddle.new 0
+push constant 7
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push argument 2
+pop this 4
+push argument 3
+pop this 5
+push this 1
+pop this 3
+push pointer 0
+call Paddle.draw 1
+pop temp 0
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+sub
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+add
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+sub
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+add
+call Hitbox.new 4
+pop this 6
+push pointer 0
+return
+function Paddle.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Paddle.draw 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+sub
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+sub
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+add
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Paddle.erase 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+sub
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+sub
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+add
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Paddle.moveLeftSim 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 4
+sub
+pop this 2
+push this 6
+push this 2
+push this 4
+push constant 2
+call Math.divide 2
+sub
+push this 2
+push this 4
+push constant 2
+call Math.divide 2
+add
+push this 3
+push this 5
+push constant 2
+call Math.divide 2
+sub
+push this 3
+push this 5
+push constant 2
+call Math.divide 2
+add
+call Hitbox.update 5
+pop temp 0
+push constant 0
+return
+function Paddle.moveRightSim 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 4
+add
+pop this 2
+push this 6
+push this 2
+push this 4
+push constant 2
+call Math.divide 2
+sub
+push this 2
+push this 4
+push constant 2
+call Math.divide 2
+add
+push this 3
+push this 5
+push constant 2
+call Math.divide 2
+sub
+push this 3
+push this 5
+push constant 2
+call Math.divide 2
+add
+call Hitbox.update 5
+pop temp 0
+push constant 0
+return
+function Paddle.getHitbox 0
+push argument 0
+pop pointer 0
+push this 6
+return
+function Paddle.moveLeft 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 4
+sub
+pop this 0
+push this 6
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+sub
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+add
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+sub
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+add
+call Hitbox.update 5
+pop temp 0
+push constant 0
+return
+function Paddle.moveRight 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 4
+add
+pop this 0
+push this 6
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+sub
+push this 0
+push this 4
+push constant 2
+call Math.divide 2
+add
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+sub
+push this 1
+push this 5
+push constant 2
+call Math.divide 2
+add
+call Hitbox.update 5
+pop temp 0
+push constant 0
+return
